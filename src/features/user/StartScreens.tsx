@@ -131,13 +131,17 @@ export function HomeScreen() {
         <div className="relative flex min-h-[64px] items-center gap-[9px] px-5">
           <p className="text-[17px] font-semibold tracking-[-0.34px] text-[#0a0a0a]">Fitto</p>
           <div className="flex-1" />
-          <button
-            type="button"
-            onClick={() => navigate(isLoggedInUser ? "/user/mypage" : "/user/login")}
-            className="inline-flex items-center rounded-full border border-white bg-white/70 px-[14px] py-2 text-[11px] font-semibold text-[#0a0a0a]"
-          >
-            {isLoggedInUser ? "마이페이지" : "로그인"}
-          </button>
+          {/* 로그인 상태에서는 하단 탭바의 '마이페이지'로 들어가므로 상단 버튼은 두지 않는다.
+              비로그인 상태에서는 하단 탭바가 없어 로그인 진입 경로가 필요하니 '로그인' 버튼만 남긴다. */}
+          {isLoggedInUser ? null : (
+            <button
+              type="button"
+              onClick={() => navigate("/user/login")}
+              className="inline-flex items-center rounded-full border border-white bg-white/70 px-[14px] py-2 text-[11px] font-semibold text-[#0a0a0a]"
+            >
+              로그인
+            </button>
+          )}
         </div>
         <div className="relative flex flex-col px-5 pb-7 pt-[56px]">
           <h1 className="m-0 text-[38px] font-semibold leading-[1.2] tracking-[-1.52px] text-[#0a0a0a]">

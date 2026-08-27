@@ -237,7 +237,7 @@ export function BottomTabBar({ active }: { active?: "home" | "records" }) {
         }`}
       >
         <BookmarkIcon />
-        <span className="text-[11px] font-semibold tracking-[-0.055px]">기록</span>
+        <span className="text-[11px] font-semibold tracking-[-0.055px]">마이페이지</span>
       </button>
     </nav>
   );
