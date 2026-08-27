@@ -106,6 +106,11 @@ const emptyDraft = (): DiagnosisDraft => ({
   designElements: [],
   preferredItems: [],
   avoidedElements: [],
+  // 예산은 슬라이더가 처음부터 6~12만 원(코드 3~4)을 보여준다. 이 표시값을 실제 값으로도
+  // 채워, 사용자가 슬라이더를 안 건드리고 기본 범위를 그대로 원할 때도 다음으로 넘어갈 수
+  // 있게 한다. (값은 DiagnosisScreens의 BUDGET_DISPLAY_MIN/MAX와 같은 3/4다.)
+  budgetMinCode: 3,
+  budgetMaxCode: 4,
 });
 
 /** 예산을 아직 안 고른 진단은 범위를 만들지 않는다. 0으로 채우면 고른 것처럼 보인다. */
