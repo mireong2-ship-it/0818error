@@ -405,8 +405,14 @@ const PROFILE_BUDGET_DISPLAY_MAX = 4;
 /** I4 · 프로필 3/3 가격과 TPO. */
 export function InfluencerProfileBudgetScreen() {
   const navigate = useNavigate();
-  const [budgetMinCode, setBudgetMinCode] = useState(influencerProfileDraft.budgetMinCode);
-  const [budgetMaxCode, setBudgetMaxCode] = useState(influencerProfileDraft.budgetMaxCode);
+  // 사용자 진단과 마찬가지로, 슬라이더가 보여주는 기본 6~12만 원(코드 3~4)을 실제 값으로도
+  // 시작해 두어, 가격대를 안 건드리고 기본 범위를 원할 때도 저장이 막히지 않게 한다.
+  const [budgetMinCode, setBudgetMinCode] = useState(
+    influencerProfileDraft.budgetMinCode ?? PROFILE_BUDGET_DISPLAY_MIN,
+  );
+  const [budgetMaxCode, setBudgetMaxCode] = useState(
+    influencerProfileDraft.budgetMaxCode ?? PROFILE_BUDGET_DISPLAY_MAX,
+  );
   const [budgetApproach, setBudgetApproach] = useState(influencerProfileDraft.budgetApproach);
   const [occasions, setOccasions] = useState<string[]>(influencerProfileDraft.tpos);
   const [coachingType, setCoachingType] = useState(influencerProfileDraft.coachingType);

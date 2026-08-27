@@ -723,8 +723,8 @@ export function BudgetScreen() {
       />
       <div className="flex flex-1 flex-col px-5 pb-6 pt-[34px]">
         <MemberSwitch />
-        {/* 슬라이더는 손잡이 두 개가 항상 어딘가에 있어야 해서 표시 위치만 가운데로 둔다.
-            고르기 전에는 값을 저장하지 않고, 아래 안내와 다음 버튼으로 선택을 요구한다. */}
+        {/* 기본 6~12만 원(코드 3~4)이 emptyDraft에 이미 채워져 있어, 슬라이더를 안 움직여도
+            그 값이 그대로 선택된 것으로 처리된다. `??`는 값이 비는 예외 상황용 방어값이다. */}
         <BudgetRangeSlider
           minCode={form.budgetMinCode ?? BUDGET_DISPLAY_MIN}
           maxCode={form.budgetMaxCode ?? BUDGET_DISPLAY_MAX}
@@ -736,10 +736,6 @@ export function BudgetScreen() {
             })
           }
         />
-        {form.budgetMinCode === undefined ? (
-          <p className="mt-3 text-[13px] text-[#8e8e93]">예산 범위를 움직여 선택해 주세요.</p>
-        ) : null}
-
         <div className="mt-9 flex items-center justify-between">
           <p className="text-[19px] font-bold tracking-[-0.38px] text-[#0a0a0a]">평소 구매 기준</p>
           <p className="text-[13px] text-[#8e8e93]">1개 선택</p>
