@@ -278,7 +278,8 @@ export function UserLoginScreen() {
     void signIn({ loginId, password })
       .then((account) => {
         // 인플루언서 계정으로 사용자 흐름에 들어오는 것을 여기서도 막는다.
-        navigate(account.role === "influencer" ? "/influencer/requests" : "/user/coaching");
+        // 사용자는 로그인 후 홈(A1)으로 보내, 하단 탭바에서 마이페이지 등을 바로 찾을 수 있게 한다.
+        navigate(account.role === "influencer" ? "/influencer/requests" : "/");
       })
       .catch((error: unknown) => {
         setLoginError(error instanceof Error ? error.message : "로그인하지 못했어요.");
