@@ -118,13 +118,26 @@ export function BodyScreen() {
           <input
             aria-label="키"
             type="number"
+            inputMode="numeric"
+            step={1}
             min={HEIGHT_MIN}
             max={HEIGHT_MAX}
+            // 키는 매칭에 소수점이 필요 없어 정수로만 받는다. 소수점(.)·지수(e) 등은
+            // 타이핑 단계에서 막고, 붙여넣기로 들어온 값도 아래 onChange에서 정수로 자른다.
+            onKeyDown={(event) => {
+              if ([".", "e", "E", "+", "-"].includes(event.key)) {
+                event.preventDefault();
+              }
+            }}
             // 비우면 값 자체를 지운다. Number("")는 0이라 그대로 두면 "0cm를 골랐다"가 된다.
             value={form.height ?? ""}
-            onChange={(event) =>
-              update({ height: event.target.value === "" ? undefined : Number(event.target.value) })
-            }
+            onChange={(event) => {
+              const next =
+                event.target.value === ""
+                  ? undefined
+                  : Math.trunc(Number(event.target.value));
+              update({ height: next === undefined || Number.isNaN(next) ? undefined : next });
+            }}
             className="w-full bg-transparent text-[16px] font-semibold tracking-[-0.32px] text-[#0a0a0a] outline-none"
           />
           <span className="shrink-0 text-[13px] text-[#8e8e93]">cm</span>

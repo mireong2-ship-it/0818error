@@ -25,7 +25,7 @@ describe("BiasFit React flow", () => {
     ).toBeInTheDocument();
   });
 
-  it("moves from the reference home screen into the user coaching flow", async () => {
+  it("returns the user to the home screen after logging in", async () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: "이미 계정이 있어요" }));
@@ -43,9 +43,13 @@ describe("BiasFit React flow", () => {
       target: { value: "biasfit01" },
     });
     fireEvent.click(screen.getByRole("button", { name: "로그인" }));
+    // 로그인 후에는 홈(A1)으로 돌아오고, 로그인 상태에서만 보이는 하단 탭바의 '마이페이지'가 뜬다.
     expect(
-      await screen.findByRole("heading", {
-        name: /어떤 스타일링을 원하나요/,
+      await screen.findByRole("button", { name: "마이페이지" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: /내 취향은 그대로, 오늘의 코디는 더 쉽게/,
       }),
     ).toBeInTheDocument();
   });
@@ -66,7 +70,7 @@ describe("BiasFit React flow", () => {
     ).toBeInTheDocument();
   });
 
-  it("creates a user account and continues to coaching selection", async () => {
+  it("creates a user account and continues straight to the body diagnosis step", async () => {
     render(<App />);
 
     // "시작하기"는 곧바로 회원가입 유형 선택(A2)으로 간다.
@@ -97,9 +101,10 @@ describe("BiasFit React flow", () => {
       screen.getByRole("button", { name: "가입하고 시작하기" }),
     );
 
+    // U2(스타일링 유형 선택)를 건너뛰고 바로 1인(개인) 코칭의 첫 화면(U3-1 체형)으로 간다.
     expect(
       await screen.findByRole("heading", {
-        name: /어떤 스타일링을 원하나요/,
+        name: /본인의 체형 정보를 알려주세요/,
       }),
     ).toBeInTheDocument();
   });

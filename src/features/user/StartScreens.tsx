@@ -99,7 +99,15 @@ function Reveal({
 export function HomeScreen() {
   const navigate = useNavigate();
   const { status, account } = useAuth();
+  const { dispatch } = useAppState();
   const isLoggedInUser = status === "signedIn" && account?.role === "user";
+
+  // 로그인한 사용자는 U2(스타일링 유형 선택)를 건너뛰고 바로 1인(개인) 코칭으로 들어간다.
+  // 예전에 2인 그룹을 골랐던 사용자의 저장 상태가 남아 있어도 개인 흐름으로 시작하도록 mode를 고정한다.
+  const startPersonalCoaching = () => {
+    dispatch({ type: "setMode", mode: "personal" });
+    navigate("/user/body");
+  };
 
   return (
     <section className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white">
@@ -131,13 +139,17 @@ export function HomeScreen() {
         <div className="relative flex min-h-[64px] items-center gap-[9px] px-5">
           <p className="text-[17px] font-semibold tracking-[-0.34px] text-[#0a0a0a]">Fitto</p>
           <div className="flex-1" />
-          <button
-            type="button"
-            onClick={() => navigate(isLoggedInUser ? "/user/mypage" : "/user/login")}
-            className="inline-flex items-center rounded-full border border-white bg-white/70 px-[14px] py-2 text-[11px] font-semibold text-[#0a0a0a]"
-          >
-            {isLoggedInUser ? "마이페이지" : "로그인"}
-          </button>
+          {/* 로그인 상태에서는 하단 탭바의 '마이페이지'로 들어가므로 상단 버튼은 두지 않는다.
+              비로그인 상태에서는 하단 탭바가 없어 로그인 진입 경로가 필요하니 '로그인' 버튼만 남긴다. */}
+          {isLoggedInUser ? null : (
+            <button
+              type="button"
+              onClick={() => navigate("/user/login")}
+              className="inline-flex items-center rounded-full border border-white bg-white/70 px-[14px] py-2 text-[11px] font-semibold text-[#0a0a0a]"
+            >
+              로그인
+            </button>
+          )}
         </div>
         <div className="relative flex flex-col px-5 pb-7 pt-[56px]">
           <h1 className="m-0 text-[38px] font-semibold leading-[1.2] tracking-[-1.52px] text-[#0a0a0a]">
@@ -246,7 +258,7 @@ export function HomeScreen() {
       <div className="flex flex-col gap-[10px] px-5 pb-[26px] pt-3">
         <button
           type="button"
-          onClick={() => navigate(isLoggedInUser ? "/user/coaching" : "/signup")}
+          onClick={() => (isLoggedInUser ? startPersonalCoaching() : navigate("/signup"))}
           className="flex min-h-[58px] w-full items-center justify-center rounded-[14px] bg-[#0a0a0a] text-[17px] font-bold text-white"
         >
           시작하기
@@ -278,7 +290,8 @@ export function UserLoginScreen() {
     void signIn({ loginId, password })
       .then((account) => {
         // 인플루언서 계정으로 사용자 흐름에 들어오는 것을 여기서도 막는다.
-        navigate(account.role === "influencer" ? "/influencer/requests" : "/user/coaching");
+        // 사용자는 로그인 후 홈(A1)으로 보내, 하단 탭바에서 마이페이지 등을 바로 찾을 수 있게 한다.
+        navigate(account.role === "influencer" ? "/influencer/requests" : "/");
       })
       .catch((error: unknown) => {
         setLoginError(error instanceof Error ? error.message : "로그인하지 못했어요.");
