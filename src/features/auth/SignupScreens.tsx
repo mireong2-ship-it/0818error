@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import type { AccountRole, SignupForm } from "../../app/types.js";
+import { useAppState } from "../../app/AppStateProvider.js";
 import { useAuth } from "../../app/AuthProvider.js";
 import { PrimaryCta, StepHeader, TopBar } from "../../shared/AppShell.js";
 import iconCheck from "../../assets/mypage/icon-check.svg";
@@ -150,6 +151,7 @@ export function SignupRoleScreen() {
 function SignupFormScreen({ role }: { role: AccountRole }) {
   const navigate = useNavigate();
   const { signUp } = useAuth();
+  const { dispatch } = useAppState();
   const [form, setForm] = useState<SignupForm>(emptyForm);
   const [errors, setErrors] = useState<SignupErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -229,7 +231,15 @@ function SignupFormScreen({ role }: { role: AccountRole }) {
       displayName: form.displayName,
       password: form.password,
     })
-      .then(() => navigate(isInfluencer ? "/influencer/profile" : "/user/coaching"))
+      .then(() => {
+        if (isInfluencer) {
+          navigate("/influencer/profile");
+          return;
+        }
+        // 사용자는 U2(스타일링 유형 선택)를 건너뛰고 바로 1인(개인) 코칭으로 시작한다.
+        dispatch({ type: "setMode", mode: "personal" });
+        navigate("/user/body");
+      })
       .catch((error: unknown) => {
         setSubmitError(error instanceof Error ? error.message : "가입하지 못했어요.");
         setSubmitting(false);

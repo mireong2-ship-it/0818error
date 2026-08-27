@@ -99,7 +99,15 @@ function Reveal({
 export function HomeScreen() {
   const navigate = useNavigate();
   const { status, account } = useAuth();
+  const { dispatch } = useAppState();
   const isLoggedInUser = status === "signedIn" && account?.role === "user";
+
+  // 로그인한 사용자는 U2(스타일링 유형 선택)를 건너뛰고 바로 1인(개인) 코칭으로 들어간다.
+  // 예전에 2인 그룹을 골랐던 사용자의 저장 상태가 남아 있어도 개인 흐름으로 시작하도록 mode를 고정한다.
+  const startPersonalCoaching = () => {
+    dispatch({ type: "setMode", mode: "personal" });
+    navigate("/user/body");
+  };
 
   return (
     <section className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white">
@@ -250,7 +258,7 @@ export function HomeScreen() {
       <div className="flex flex-col gap-[10px] px-5 pb-[26px] pt-3">
         <button
           type="button"
-          onClick={() => navigate(isLoggedInUser ? "/user/coaching" : "/signup")}
+          onClick={() => (isLoggedInUser ? startPersonalCoaching() : navigate("/signup"))}
           className="flex min-h-[58px] w-full items-center justify-center rounded-[14px] bg-[#0a0a0a] text-[17px] font-bold text-white"
         >
           시작하기

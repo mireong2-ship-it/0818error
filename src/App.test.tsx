@@ -70,7 +70,7 @@ describe("BiasFit React flow", () => {
     ).toBeInTheDocument();
   });
 
-  it("creates a user account and continues to coaching selection", async () => {
+  it("creates a user account and continues straight to the body diagnosis step", async () => {
     render(<App />);
 
     // "시작하기"는 곧바로 회원가입 유형 선택(A2)으로 간다.
@@ -101,9 +101,10 @@ describe("BiasFit React flow", () => {
       screen.getByRole("button", { name: "가입하고 시작하기" }),
     );
 
+    // U2(스타일링 유형 선택)를 건너뛰고 바로 1인(개인) 코칭의 첫 화면(U3-1 체형)으로 간다.
     expect(
       await screen.findByRole("heading", {
-        name: /어떤 스타일링을 원하나요/,
+        name: /본인의 체형 정보를 알려주세요/,
       }),
     ).toBeInTheDocument();
   });
